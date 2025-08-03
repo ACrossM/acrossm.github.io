@@ -88,7 +88,6 @@
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const calendarEl = document.getElementById('calendar');
-      // ★★★ 新しいURLを反映しました ★★★
       const gasWebAppUrl = 'https://script.google.com/macros/s/AKfycbzuwcfA--IUZAXBSet2jB5kyGMFch9bcJ_C62xMHiV-afdxZ8DUa1--maQnMyKlC7F5/exec';
       const inflatableItems = ['パンダ', 'ゴリラ', '恐竜', 'ユニコーン', 'サンタクロース', '逆立ちピエロ', 'ハロウィンかぼちゃ'];
       let allEventsCache = [];
@@ -99,9 +98,10 @@
         headerToolbar: {
           left: 'prev,next today',
           center: 'title',
-          right: 'dayGridMonth,listWeek'
+          // ★★★ 「listWeek」を削除 ★★★
+          right: 'dayGridMonth'
         },
-        buttonText: { today: '今日', month: '月', list:  'リスト' },
+        buttonText: { today: '今日', month: '月' },
         displayEventTime: false,
         events: function(fetchInfo, successCallback, failureCallback) {
           if (allEventsCache.length > 0) {
@@ -124,15 +124,14 @@
         const selectedValue = document.getElementById('product-filter').value;
         
         if (selectedValue === 'all') {
-          return events; // すべて表示
+          return events;
         } else if (selectedValue === 'inflatables') {
-          return events.filter(event => inflatableItems.includes(event.title)); // インフレーターのみ
+          return events.filter(event => inflatableItems.includes(event.title));
         } else {
-          return events.filter(event => event.title === selectedValue); // 特定の商品のみ
+          return events.filter(event => event.title === selectedValue);
         }
       }
 
-      // ドロップダウンが変更されたらカレンダーを更新
       document.getElementById('product-filter').addEventListener('change', () => {
         calendar.removeAllEvents();
         calendar.addEventSource(filterEvents(allEventsCache));
