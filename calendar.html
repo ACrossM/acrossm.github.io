@@ -4,156 +4,126 @@
 <meta charset='utf-8' />
 <meta name='viewport' content='width=device-width, initial-scale=1.0' />
 <title>貸出状況カレンダー</title>
-
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
 
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const calendarEl = document.getElementById('calendar');
-
-    const calendar = new FullCalendar.Calendar(calendarEl, {
-      // --- 基本設定 ---
-      initialView: 'dayGridMonth', // 月表示
-      locale: 'ja', // 日本語化
-      headerToolbar: {
-        left: 'prev,next today',
-        center: 'title',
-        right: 'dayGridMonth,listWeek' // 月表示とリスト表示
-      },
-      businessHours: true, // 土日をグレー表示
-      buttonText: {
-          today: '今日',
-          month: '月',
-          list:  'リスト'
-      },
-
-      // --- イベントデータの読み込み ---
-      // ここに、Step2でコピーしたウェブアプリのURLを貼り付けます
-      events: 'https://script.google.com/macros/s/AKfycbxh2wqe4jbtKg3WVCHvvhqGkM7ca0_xFA72FxtihQViiI1AEKaTYIcDzmRUthVGxYTLAg/exec'
-    });
-
-    // カレンダーを描画
-    calendar.render();
-  });
-</script>
-
 <style>
- /* Google FontsからNoto Sans JPを読み込む */
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
-
-/* 全体のスタイル */
-body {
-    /* フォントをサイトの雰囲気に合わせる */
-    font-family: 'Noto Sans JP', sans-serif;
-    background-color: #fff; /* iframeの背景は白 */
-    margin: 0;
-    padding: 1em; /* カレンダーの周囲に余白 */
-}
-
-/* カレンダー全体のコンテナ */
-.fc {
-    border: none; /* デフォルトの枠線を消去 */
-}
-
-/* ヘッダーツールバー（年月やボタン部分） */
-.fc-header-toolbar {
-    margin-bottom: 1.5em !important; /* ヘッダーとカレンダー本体の間の余白 */
-}
-
-/* ツールバーのタイトル（例: 2025年8月） */
-.fc-toolbar-title {
-    font-size: 1.5em;
-    font-weight: 700; /* 太字にして強調 */
-    color: #333;
-}
-
-/* ツールバーのボタン（< > 今日 月 リスト） */
-.fc-button {
-    background-color: #f0f0f0; /* 通常時のボタン背景色 */
-    color: #333;
-    border: none;
-    border-radius: 8px; /* 角を丸くする */
-    padding: 0.5em 1em;
-    font-weight: 500;
-    transition: background-color 0.2s ease; /* ホバー時のアニメーション */
-    text-transform: capitalize; /* ボタンの英語を大文字始まりに */
-}
-
-/* ボタンのホバー時（マウスを乗せた時） */
-.fc-button:hover {
-    background-color: #e0e0e0;
-}
-
-/* 「今日」ボタンと、選択中のボタン（月/リスト）のスタイル */
-.fc-button-primary:not(:disabled).fc-button-active,
-.fc-today-button {
-    /* サイトのメインカラーをアクセントに使う */
-    background-color: #FFD700 !important; 
-    color: #333 !important;
-    font-weight: 700;
-}
-.fc-button-primary:not(:disabled).fc-button-active:hover,
-.fc-today-button:hover {
-    background-color: #f0c400 !important; /* ホバー時に少し濃くする */
-}
-
-
-/* 曜日ヘッダー（日 月 火 ...） */
-.fc-col-header-cell {
-    border: none;
-    padding: 1em 0;
-    font-weight: 500;
-    color: #888;
-}
-
-/* 日付セル全体 */
-.fc-daygrid-day {
-    border: 1px solid #f0f0f0; /* セルの区切り線を薄く */
-}
-
-/* 日付の数字 */
-.fc-daygrid-day-number {
-    padding: 0.5em;
-    font-weight: 500;
-}
-
-/* 「今日」のマスの背景色 */
-.fc-day-today {
-    background-color: #FFFBE6; /* 薄い黄色で優しくハイライト */
-}
-/* 今日の日付の数字を太くする */
-.fc-day-today .fc-daygrid-day-number {
-    font-weight: 700;
-}
-
-
-/* 予約イベントのスタイル */
-.fc-event {
-    background-color: #FFD700 !important; /* メインの黄色を背景に */
-    border-color: #FFD700 !important;
-    color: #333 !important; /* 文字色は黒に近いほうが見やすい */
-    border-radius: 4px;
-    padding: 3px 6px;
-    font-weight: 500;
-    font-size: 0.85em;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-
-.fc-event:hover {
-    background-color: #f0c400 !important;
-}
-
-/* リスト表示の際のスタイル */
-.fc-list-event-dot {
-    border-color: #FFD700 !important; /* リストの点も黄色に */
-}
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+  body { font-family: 'Noto Sans JP', sans-serif; background-color: #fff; margin: 0; padding: 1em; }
+  .filter-group { margin-bottom: 1em; padding: 15px; background-color: #f9f9f9; border-radius: 8px; }
+  .filter-group h3 { font-size: 1em; font-weight: 700; margin-top: 0; margin-bottom: 10px; color: #333; border-bottom: 2px solid #FFD700; padding-bottom: 5px; }
+  .filter-items { display: flex; flex-wrap: wrap; gap: 10px; }
+  .filter-items label { display: flex; align-items: center; cursor: pointer; padding: 5px 10px; border-radius: 6px; transition: background-color 0.2s ease; font-size: 0.9em; }
+  .filter-items input { margin-right: 8px; accent-color: #FFD700; }
+  .filter-items label:hover { background-color: #f0f0f0; }
+  .toggle-buttons { margin-bottom: 15px; display: flex; gap: 10px; }
+  .toggle-buttons button { background-color: #e0e0e0; border: none; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8em; font-weight: 500; }
+  .toggle-buttons button:hover { background-color: #d0d0d0; }
+  .fc { border: none; }
+  .fc-header-toolbar { margin-bottom: 1.5em !important; }
+  .fc-toolbar-title { font-size: 1.5em; font-weight: 700; color: #333; }
+  .fc-button { background-color: #f0f0f0; color: #333; border: none; border-radius: 8px; padding: 0.5em 1em; font-weight: 500; transition: background-color 0.2s ease; text-transform: capitalize; }
+  .fc-button:hover { background-color: #e0e0e0; }
+  .fc-button-primary:not(:disabled).fc-button-active, .fc-today-button { background-color: #FFD700 !important; color: #333 !important; font-weight: 700; }
+  .fc-button-primary:not(:disabled).fc-button-active:hover, .fc-today-button:hover { background-color: #f0c400 !important; }
+  .fc-col-header-cell { border: none; padding: 1em 0; font-weight: 500; color: #888; }
+  .fc-daygrid-day { border: 1px solid #f0f0f0; }
+  .fc-daygrid-day-number { padding: 0.5em; font-weight: 500; }
+  .fc-day-today { background-color: #FFFBE6; }
+  .fc-day-today .fc-daygrid-day-number { font-weight: 700; }
+  .fc-event { background-color: #FFD700 !important; border-color: #FFD700 !important; color: #333 !important; border-radius: 4px; padding: 3px 6px; font-weight: 500; font-size: 0.85em; cursor: pointer; transition: background-color 0.2s ease; }
+  .fc-event:hover { background-color: #f0c400 !important; }
+  .fc-list-event-dot { border-color: #FFD700 !important; }
 </style>
-
 </head>
 <body>
 
+  <div class="toggle-buttons">
+    <button id="check-all">すべて選択</button>
+    <button id="uncheck-all">すべて解除</button>
+  </div>
+
+  <div id="filter-container">
+    <div class="filter-group">
+      <h3>アトラクション</h3>
+      <div class="filter-items" id="attractions-filter">
+        <label><input type="checkbox" name="product_group" value="inflatables" checked> インフレーター（全種類）🐼</label>
+        <label><input type="checkbox" name="product" value="電車DEスロット" checked> 電車DEスロット🎰</label>
+        <label><input type="checkbox" name="product" value="AR釣りゲーム" checked> AR釣りゲーム🎣</label>
+        <label><input type="checkbox" name="product" value="縁日" checked> 縁日🎐</label>
+        <label><input type="checkbox" name="product" value="縁日（やぐら付）" checked> 縁日（やぐら付）🎐</label>
+        <label><input type="checkbox" name="product" value="うごく！ぬりえ" checked> うごく！ぬりえ🎨</label>
+        <label><input type="checkbox" name="product" value="カッティングレーサー" checked> カッティングレーサー🧍</label>
+        <label><input type="checkbox" name="product" value="キニナルゲームス" checked> キニナルゲームス🎮</label>
+        <label><input type="checkbox" name="product" value="段ボール迷路" checked> 段ボール迷路🎪</label>
+        <label><input type="checkbox" name="product" value="ハンドスナイパー" checked> ハンドスナイパー🎯</label>
+            <label><input type="checkbox" name="product" value="プラレール" checked> プラレール🚃</label>
+        <label><input type="checkbox" name="product" value="ポップコーン" checked> ポップコーン🍿</label>
+        <label><input type="checkbox" name="product" value="メッシュビジョン" checked> メッシュビジョン📺️</label>
+        <label><input type="checkbox" name="product" value="わたがし" checked> わたがし🍬</label>
+      </div>
+    </div>
+
+    
+
   <div id='calendar'></div>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const calendarEl = document.getElementById('calendar');
+      // ★★★ 頂いたURLを反映しました ★★★
+      const gasWebAppUrl = 'https://script.google.com/macros/s/AKfycbxh2wqe4jbtKg3WVCHvvhqGkM7ca0_xFA72FxtihQViiI1AEKaTYIcDzmRUthVGxYTLAg/exec';
+
+      const inflatableItems = [
+        'パンダ', 'ゴリラ', '恐竜', 'ユニコーン', 'サンタクロース', '逆立ちピエロ', 'ハロウィンかぼちゃ'
+      ];
+
+      const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        locale: 'ja',
+        headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,listWeek'
+        },
+        buttonText: { today: '今日', month: '月', list:  'リスト' },
+
+        events: function(fetchInfo, successCallback, failureCallback) {
+          fetch(gasWebAppUrl)
+            .then(response => response.json())
+            .then(allEvents => {
+              let productsToShow = [];
+              document.querySelectorAll('#attractions-filter input:checked').forEach(input => {
+                productsToShow.push(input.value);
+              });
+              if (document.querySelector('#inflatables-filter input:checked')) {
+                productsToShow.push(...inflatableItems);
+              }
+              const filteredEvents = allEvents.filter(event => productsToShow.includes(event.title));
+              successCallback(filteredEvents);
+            })
+            .catch(error => failureCallback(error));
+        }
+      });
+
+      calendar.render();
+
+      const allCheckboxes = document.querySelectorAll('#filter-container input[type="checkbox"]');
+      allCheckboxes.forEach(input => {
+        input.addEventListener('change', () => {
+          calendar.refetchEvents();
+        });
+      });
+
+      document.getElementById('check-all').addEventListener('click', () => {
+        allCheckboxes.forEach(checkbox => checkbox.checked = true);
+        calendar.refetchEvents();
+      });
+
+      document.getElementById('uncheck-all').addEventListener('click', () => {
+        allCheckboxes.forEach(checkbox => checkbox.checked = false);
+        calendar.refetchEvents();
+      });
+    });
+  </script>
 </body>
 </html>
