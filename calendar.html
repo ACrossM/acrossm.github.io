@@ -66,10 +66,6 @@
         locale: 'ja',
         headerToolbar: false,
         displayEventTime: false,
-        
-        // ★★★ カレンダーの高さをコンテンツに合わせて自動調整する設定 ★★★
-        height: 'auto',
-
         datesSet: function(dateInfo) {
           document.getElementById('calendar-title').textContent = dateInfo.view.title;
         },
@@ -99,6 +95,15 @@
         calendar.removeAllEvents();
         calendar.addEventSource(filterEvents(allEventsCache));
       });
+
+      // ★★★ 高さを自動調整するためのコード ★★★
+      const ro = new ResizeObserver(entries => {
+        window.requestAnimationFrame(() => {
+          const height = document.body.scrollHeight;
+          window.parent.postMessage({ type: 'calendarHeight', height: height }, '*');
+        });
+      });
+      ro.observe(document.body);
     });
   </script>
 </body>
