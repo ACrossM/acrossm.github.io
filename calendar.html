@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset='utf-8' />
+<meta name='viewport' content='width=device-width, initial-scale=1.0' />
+<title>貸出状況カレンダー</title>
+
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const calendarEl = document.getElementById('calendar');
+
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+      // --- 基本設定 ---
+      initialView: 'dayGridMonth', // 月表示
+      locale: 'ja', // 日本語化
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,listWeek' // 月表示とリスト表示
+      },
+      businessHours: true, // 土日をグレー表示
+      buttonText: {
+          today: '今日',
+          month: '月',
+          list:  'リスト'
+      },
+
+      // --- イベントデータの読み込み ---
+      // ここに、Step2でコピーしたウェブアプリのURLを貼り付けます
+      events: 'https://script.google.com/macros/s/AKfycbxh2wqe4jbtKg3WVCHvvhqGkM7ca0_xFA72FxtihQViiI1AEKaTYIcDzmRUthVGxYTLAg/exec'
+    });
+
+    // カレンダーを描画
+    calendar.render();
+  });
+</script>
+
+<style>
+ /* Google FontsからNoto Sans JPを読み込む */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+
+/* 全体のスタイル */
+body {
+    /* フォントをサイトの雰囲気に合わせる */
+    font-family: 'Noto Sans JP', sans-serif;
+    background-color: #fff; /* iframeの背景は白 */
+    margin: 0;
+    padding: 1em; /* カレンダーの周囲に余白 */
+}
+
+/* カレンダー全体のコンテナ */
+.fc {
+    border: none; /* デフォルトの枠線を消去 */
+}
+
+/* ヘッダーツールバー（年月やボタン部分） */
+.fc-header-toolbar {
+    margin-bottom: 1.5em !important; /* ヘッダーとカレンダー本体の間の余白 */
+}
+
+/* ツールバーのタイトル（例: 2025年8月） */
+.fc-toolbar-title {
+    font-size: 1.5em;
+    font-weight: 700; /* 太字にして強調 */
+    color: #333;
+}
+
+/* ツールバーのボタン（< > 今日 月 リスト） */
+.fc-button {
+    background-color: #f0f0f0; /* 通常時のボタン背景色 */
+    color: #333;
+    border: none;
+    border-radius: 8px; /* 角を丸くする */
+    padding: 0.5em 1em;
+    font-weight: 500;
+    transition: background-color 0.2s ease; /* ホバー時のアニメーション */
+    text-transform: capitalize; /* ボタンの英語を大文字始まりに */
+}
+
+/* ボタンのホバー時（マウスを乗せた時） */
+.fc-button:hover {
+    background-color: #e0e0e0;
+}
+
+/* 「今日」ボタンと、選択中のボタン（月/リスト）のスタイル */
+.fc-button-primary:not(:disabled).fc-button-active,
+.fc-today-button {
+    /* サイトのメインカラーをアクセントに使う */
+    background-color: #FFD700 !important; 
+    color: #333 !important;
+    font-weight: 700;
+}
+.fc-button-primary:not(:disabled).fc-button-active:hover,
+.fc-today-button:hover {
+    background-color: #f0c400 !important; /* ホバー時に少し濃くする */
+}
+
+
+/* 曜日ヘッダー（日 月 火 ...） */
+.fc-col-header-cell {
+    border: none;
+    padding: 1em 0;
+    font-weight: 500;
+    color: #888;
+}
+
+/* 日付セル全体 */
+.fc-daygrid-day {
+    border: 1px solid #f0f0f0; /* セルの区切り線を薄く */
+}
+
+/* 日付の数字 */
+.fc-daygrid-day-number {
+    padding: 0.5em;
+    font-weight: 500;
+}
+
+/* 「今日」のマスの背景色 */
+.fc-day-today {
+    background-color: #FFFBE6; /* 薄い黄色で優しくハイライト */
+}
+/* 今日の日付の数字を太くする */
+.fc-day-today .fc-daygrid-day-number {
+    font-weight: 700;
+}
+
+
+/* 予約イベントのスタイル */
+.fc-event {
+    background-color: #FFD700 !important; /* メインの黄色を背景に */
+    border-color: #FFD700 !important;
+    color: #333 !important; /* 文字色は黒に近いほうが見やすい */
+    border-radius: 4px;
+    padding: 3px 6px;
+    font-weight: 500;
+    font-size: 0.85em;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.fc-event:hover {
+    background-color: #f0c400 !important;
+}
+
+/* リスト表示の際のスタイル */
+.fc-list-event-dot {
+    border-color: #FFD700 !important; /* リストの点も黄色に */
+}
+</style>
+
+</head>
+<body>
+
+  <div id='calendar'></div>
+
+</body>
+</html>
