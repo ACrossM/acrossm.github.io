@@ -51,6 +51,7 @@
         locale: 'ja',
         headerToolbar: false,
         displayEventTime: false,
+        height: 'auto',
         datesSet: function(dateInfo) {
           document.getElementById('calendar-title').textContent = dateInfo.view.title;
         },
@@ -78,13 +79,6 @@
         calendar.removeAllEvents();
         calendar.addEventSource(filterEvents(allEventsCache));
       });
-      const ro = new ResizeObserver(() => {
-        window.requestAnimationFrame(() => {
-          const height = document.body.scrollHeight;
-          window.parent.postMessage({ type: 'calendarHeight', height: height }, '*');
-        });
-      });
-      ro.observe(document.body);
     });
   </script>
 </body>
