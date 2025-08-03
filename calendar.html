@@ -66,6 +66,10 @@
         locale: 'ja',
         headerToolbar: false,
         displayEventTime: false,
+        
+        // ★★★ カレンダーの高さをコンテンツに合わせて自動調整する設定 ★★★
+        height: 'auto',
+
         datesSet: function(dateInfo) {
           document.getElementById('calendar-title').textContent = dateInfo.view.title;
         },
@@ -76,40 +80,4 @@
             fetch(gasWebAppUrl).then(response => response.json()).then(allEvents => {
               allEventsCache = allEvents;
               successCallback(filterEvents(allEventsCache));
-            }).catch(error => failureCallback(error));
-          }
-        }
-      });
-      calendar.render();
-
-      function filterEvents(events) {
-        const selectedValue = document.getElementById('product-filter').value;
-        if (selectedValue === 'all') return events;
-        if (selectedValue === 'inflatables') return events.filter(event => inflatableItems.includes(event.title));
-        return events.filter(event => event.title === selectedValue);
-      }
-
-      document.getElementById('prev-button').addEventListener('click', () => { calendar.prev(); });
-      document.getElementById('next-button').addEventListener('click', () => { calendar.next(); });
-      document.getElementById('product-filter').addEventListener('change', () => {
-        calendar.removeAllEvents();
-        calendar.addEventSource(filterEvents(allEventsCache));
-      });
-
-      // ★★★ ここから高さを自動調整するためのコード ★★★
-      // ページの高さが変わるのを監視する仕組み
-      const ro = new ResizeObserver(entries => {
-        // requestAnimationFrameを使って、ブラウザの描画タイミングに合わせる
-        window.requestAnimationFrame(() => {
-          // 高さを計算
-          const height = document.body.scrollHeight;
-          // 親ページ（STUDIO）に高さを通知
-          window.parent.postMessage({ type: 'calendarHeight', height: height }, '*');
-        });
-      });
-      // body要素の監視を開始
-      ro.observe(document.body);
-    });
-  </script>
-</body>
-</html>
+            }).catch(error
