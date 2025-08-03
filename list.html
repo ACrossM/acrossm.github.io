@@ -7,33 +7,75 @@
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
 
 <style>
-  /* ... (CSSは変更なし) ... */
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+  body { font-family: 'Noto Sans JP', sans-serif; background-color: #fff; margin: 0; padding: 1em; }
+  .custom-header { display: flex; flex-direction: column; gap: 15px; margin-bottom: 1.5em; }
+  .filter-container select { width: 100%; padding: 10px; font-size: 0.9em; border-radius: 8px; border: 1px solid #ccc; background-color: #fff; -webkit-appearance: none; appearance: none; background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23333"><path d="M7 10l5 5 5-5z"/></svg>'); background-repeat: no-repeat; background-position: right 12px center; background-size: 24px; cursor: pointer; }
+  .navigation-container { display: flex; align-items: center; justify-content: center; width: 100%; }
+  .navigation-container h2 { font-size: 1.2em; font-weight: 700; color: #333; margin: 0 1em; }
+  .nav-button { background-color: transparent; border: none; cursor: pointer; color: #455a64; font-size: 1.5em; line-height: 1; padding: 0 5px; }
+  .fc { border: none; }
+  .fc-list-day-cushion { background-color: #f9f9f9 !important; }
+  .fc-list-event { background-color: #fff !important; }
+  .fc-list-event-dot { border-color: #e0f2f7 !important; }
+  .inflatable-event .fc-list-event-dot { border-color: #ffebee !important; }
 </style>
 </head>
 <body>
-  <div id="debug-height" style="position: fixed; top: 0; left: 0; background: yellow; padding: 5px; z-index: 9999; font-size: 10px;"></div>
 
   <div class="custom-header">
+    <div class="filter-container">
+      <select id="product-filter">
+        <option value="all">すべての商品を表示</option>
+        <optgroup label="アトラクション">
+          <option value="電車DEスロット">電車DEスロット</option>
+          <option value="AR釣りゲーム">AR釣りゲーム</option>
+          </optgroup>
+        <optgroup label="インフレーター">
+          <option value="inflatables">インフレーター（すべて）</option>
+          </optgroup>
+      </select>
     </div>
+    <div class="navigation-container">
+      <button id="prev-button" class="nav-button">&lt;</button>
+      <h2 id="calendar-title"></h2>
+      <button id="next-button" class="nav-button">&gt;</button>
+    </div>
+  </div>
 
   <div id='calendar'></div>
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // ... (カレンダー設定は変更なし) ...
+      const calendarEl = document.getElementById('calendar');
+      const gasWebAppUrl = 'https://script.google.com/macros/s/AKfycbzuwcfA--IUZAXBSet2jB5kyGMFch9bcJ_C62xMHiV-afdxZ8DUa1--maQnMyKlC7F5/exec';
+      const inflatableItems = ['パンダ', 'ゴリラ', '恐竜', 'ユニコーン', 'サンタクロース', '逆立ちピエロ', 'ハロウィンかぼちゃ'];
+      let allEventsCache = [];
 
-      // ★★★ 高さを自動調整するためのコード（デバッグ表示付き） ★★★
-      const ro = new ResizeObserver(entries => {
-        window.requestAnimationFrame(() => {
-          const height = document.body.scrollHeight;
-          // ★★★ デバッグ表示を更新 ★★★
-          document.getElementById('debug-height').innerText = 'Sending height: ' + height + 'px';
-          // 親ページ（STUDIO）に高さを通知
-          window.parent.postMessage({ type: 'calendarHeight', height: height }, '*');
-        });
+      const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'listMonth',
+        locale: 'ja',
+        headerToolbar: false,
+        displayEventTime: false,
+        
+        // ★★★ カレンダーの高さをコンテンツに合わせて自動調整する設定 ★★★
+        height: 'auto',
+
+        datesSet: function(dateInfo) {
+          document.getElementById('calendar-title').textContent = dateInfo.view.title;
+        },
+        events: function(fetchInfo, successCallback, failureCallback) {
+          if (allEventsCache.length > 0) {
+            successCallback(filterEvents(allEventsCache));
+          } else {
+            fetch(gasWebAppUrl).then(response => response.json()).then(allEvents => {
+              allEventsCache = allEvents;
+              successCallback(filterEvents(allEventsCache));
+            }).catch(error => failureCallback(error));
+          }
+        }
       });
-      ro.observe(document.body);
-    });
-  </script>
-</body>
-</html>
+      calendar.render();
+
+      function filterEvents(events) {
+        const selectedValue = document.getElementById('product-filter').
