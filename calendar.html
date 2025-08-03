@@ -80,4 +80,26 @@
             fetch(gasWebAppUrl).then(response => response.json()).then(allEvents => {
               allEventsCache = allEvents;
               successCallback(filterEvents(allEventsCache));
-            }).catch(error
+            }).catch(error => failureCallback(error));
+          }
+        }
+      });
+      calendar.render();
+
+      function filterEvents(events) {
+        const selectedValue = document.getElementById('product-filter').value;
+        if (selectedValue === 'all') return events;
+        if (selectedValue === 'inflatables') return events.filter(event => inflatableItems.includes(event.title));
+        return events.filter(event => event.title === selectedValue);
+      }
+
+      document.getElementById('prev-button').addEventListener('click', () => { calendar.prev(); });
+      document.getElementById('next-button').addEventListener('click', () => { calendar.next(); });
+      document.getElementById('product-filter').addEventListener('change', () => {
+        calendar.removeAllEvents();
+        calendar.addEventSource(filterEvents(allEventsCache));
+      });
+    });
+  </script>
+</body>
+</html>
