@@ -9,15 +9,27 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
   body { font-family: 'Noto Sans JP', sans-serif; background-color: #fff; margin: 0; padding: 1em; }
-  .filter-group { margin-bottom: 1em; padding: 15px; background-color: #f9f9f9; border-radius: 8px; }
-  .filter-group h3 { font-size: 1em; font-weight: 700; margin-top: 0; margin-bottom: 10px; color: #333; border-bottom: 2px solid #FFD700; padding-bottom: 5px; }
-  .filter-items { display: flex; flex-wrap: wrap; gap: 10px; }
-  .filter-items label { display: flex; align-items: center; cursor: pointer; padding: 5px 10px; border-radius: 6px; transition: background-color 0.2s ease; font-size: 0.9em; }
-  .filter-items input { margin-right: 8px; accent-color: #FFD700; }
-  .filter-items label:hover { background-color: #f0f0f0; }
-  .toggle-buttons { margin-bottom: 15px; display: flex; gap: 10px; }
-  .toggle-buttons button { background-color: #e0e0e0; border: none; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8em; font-weight: 500; color: #455a64; }
-  .toggle-buttons button:hover { background-color: #d0d0d0; }
+  
+  /* ドロップダウンフィルターのスタイル */
+  .filter-container {
+    margin-bottom: 1.5em;
+  }
+  .filter-container select {
+    width: 100%;
+    padding: 12px;
+    font-size: 1em;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23333"><path d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 24px;
+    cursor: pointer;
+  }
+
   .fc { border: none; }
   .fc-header-toolbar { margin-bottom: 1.5em !important; }
   .fc-toolbar-title { font-size: 1.5em; font-weight: 700; color: #333; }
@@ -30,41 +42,46 @@
   .fc-daygrid-day-number { padding: 0.5em; font-weight: 500; }
   .fc-day-today { background-color: #FFFBE6; }
   .fc-day-today .fc-daygrid-day-number { font-weight: 700; }
-  /* 通常イベントのスタイル */
   .fc-event { background-color: #e0f2f7 !important; border-color: #b2ebf2 !important; padding: 2px 5px; font-weight: 500; font-size: 0.8em; cursor: pointer; margin-bottom: 4px !important; }
   .fc-event-main { color: #455a64 !important; }
   .fc-list-event-dot { border-color: #FFD700 !important; }
-  /* インフレーターイベントの色を上書き */
   .fc-event.inflatable-event { background-color: #ffebee !important; border-color: #ffcdd2 !important; }
   .inflatable-event .fc-event-main { color: #c62828 !important; }
 </style>
 </head>
 <body>
 
-  <div class="toggle-buttons">
-    <button id="check-all">すべて選択</button>
-    <button id="uncheck-all">すべて解除</button>
+  <div class="filter-container">
+    <select id="product-filter">
+      <option value="all">すべての商品を表示</option>
+      <optgroup label="アトラクション">
+        <option value="電車DEスロット">電車DEスロット</option>
+        <option value="AR釣りゲーム">AR釣りゲーム</option>
+        <option value="縁日">縁日</option>
+        <option value="縁日（やぐら付）">縁日（やぐら付）</option>
+        <option value="うごく！ぬりえ">うごく！ぬりえ</option>
+        <option value="カッティングレーサー">カッティングレーサー</option>
+        <option value="キニナルゲームス">キニナルゲームス</option>
+        <option value="段ボール迷路">段ボール迷路</option>
+        <option value="ハンドスナイパー">ハンドスナイパー</option>
+        <option value="プラレール">プラレール</option>
+        <option value="ポップコーン">ポップコーン</option>
+        <option value="メッシュビジョン">メッシュビジョン</option>
+        <option value="わたがし">わたがし</option>
+      </optgroup>
+      <optgroup label="インフレーター">
+        <option value="inflatables">インフレーター（すべて）</option>
+        <option value="パンダ">パンダ</option>
+        <option value="ゴリラ">ゴリラ</option>
+        <option value="恐竜">恐竜</option>
+        <option value="ユニコーン">ユニコーン</option>
+        <option value="サンタクロース">サンタクロース</option>
+        <option value="逆立ちピエロ">逆立ちピエロ</option>
+        <option value="ハロウィンかぼちゃ">ハロウィンかぼちゃ</option>
+      </optgroup>
+    </select>
   </div>
 
-  <div class="filter-group">
-    <h3>表示フィルター</h3>
-    <div class="filter-items" id="filter-container">
-      <label><input type="checkbox" id="inflatables-toggle" name="product_group" value="inflatables" checked> インフレーター（すべて）</label>
-      <label><input type="checkbox" name="product" value="電車DEスロット" checked> 電車DEスロット</label>
-      <label><input type="checkbox" name="product" value="AR釣りゲーム" checked> AR釣りゲーム</label>
-      <label><input type="checkbox" name="product" value="縁日" checked> 縁日</label>
-      <label><input type="checkbox" name="product" value="縁日（やぐら付）" checked> 縁日（やぐら付）</label>
-      <label><input type="checkbox" name="product" value="うごく！ぬりえ" checked> うごく！ぬりえ</label>
-      <label><input type="checkbox" name="product" value="カッティングレーサー" checked> カッティングレーサー</label>
-      <label><input type="checkbox" name="product" value="キニナルゲームス" checked> キニナルゲームス</label>
-      <label><input type="checkbox" name="product" value="段ボール迷路" checked> 段ボール迷路</label>
-      <label><input type="checkbox" name="product" value="ハンドスナイパー" checked> ハンドスナイパー</label>
-      <label><input type="checkbox" name="product" value="プラレール" checked> プラレール</label>
-      <label><input type="checkbox" name="product" value="ポップコーン" checked> ポップコーン</label>
-      <label><input type="checkbox" name="product" value="メッシュビジョン" checked> メッシュビジョン</label>
-      <label><input type="checkbox" name="product" value="わたがし" checked> わたがし</label>
-    </div>
-  </div>
 
   <div id='calendar'></div>
 
@@ -72,7 +89,7 @@
     document.addEventListener('DOMContentLoaded', function() {
       const calendarEl = document.getElementById('calendar');
       // ★★★ 新しいURLを反映しました ★★★
-      const gasWebAppUrl = 'https://script.google.com/macros/s/AKfycbxqfWShieOHa7s6L9c6nDAH_Vp4cdsbwo2wBrxEyo5Xpro-LazsLNFCUK2pRckhhS58aw/exec';
+      const gasWebAppUrl = 'https://script.google.com/macros/s/AKfycbzuwcfA--IUZAXBSet2jB5kyGMFch9bcJ_C62xMHiV-afdxZ8DUa1--maQnMyKlC7F5/exec';
       const inflatableItems = ['パンダ', 'ゴリラ', '恐竜', 'ユニコーン', 'サンタクロース', '逆立ちピエロ', 'ハロウィンかぼちゃ'];
       let allEventsCache = [];
 
@@ -104,32 +121,19 @@
       calendar.render();
 
       function filterEvents(events) {
-        let productsToShow = [];
-        document.querySelectorAll('input[name="product"]:checked').forEach(input => {
-          productsToShow.push(input.value);
-        });
-        if (document.querySelector('#inflatables-toggle:checked')) {
-          productsToShow.push(...inflatableItems);
+        const selectedValue = document.getElementById('product-filter').value;
+        
+        if (selectedValue === 'all') {
+          return events; // すべて表示
+        } else if (selectedValue === 'inflatables') {
+          return events.filter(event => inflatableItems.includes(event.title)); // インフレーターのみ
+        } else {
+          return events.filter(event => event.title === selectedValue); // 特定の商品のみ
         }
-        return events.filter(event => productsToShow.includes(event.title));
       }
 
-      const allCheckboxes = document.querySelectorAll('#filter-container input[type="checkbox"]');
-      allCheckboxes.forEach(input => {
-        input.addEventListener('change', () => {
-          calendar.removeAllEvents();
-          calendar.addEventSource(filterEvents(allEventsCache));
-        });
-      });
-
-      document.getElementById('check-all').addEventListener('click', () => {
-        allCheckboxes.forEach(checkbox => checkbox.checked = true);
-        calendar.removeAllEvents();
-        calendar.addEventSource(filterEvents(allEventsCache));
-      });
-
-      document.getElementById('uncheck-all').addEventListener('click', () => {
-        allCheckboxes.forEach(checkbox => checkbox.checked = false);
+      // ドロップダウンが変更されたらカレンダーを更新
+      document.getElementById('product-filter').addEventListener('change', () => {
         calendar.removeAllEvents();
         calendar.addEventSource(filterEvents(allEventsCache));
       });
