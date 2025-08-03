@@ -5,7 +5,6 @@
 <meta name='viewport' content='width=device-width, initial-scale=1.0' />
 <title>貸出状況リスト</title>
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
-
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
   body { font-family: 'Noto Sans JP', sans-serif; background-color: #fff; margin: 0; padding: 1em; }
@@ -22,18 +21,16 @@
 </style>
 </head>
 <body>
-
   <div class="custom-header">
     <div class="filter-container">
       <select id="product-filter">
         <option value="all">すべての商品を表示</option>
         <optgroup label="アトラクション">
-          <option value="電車DEスロット">電車DEスロット</option>
-          <option value="AR釣りゲーム">AR釣りゲーム</option>
-          </optgroup>
+          <option value="電車DEスロット">電車DEスロット</option><option value="AR釣りゲーム">AR釣りゲーム</option><option value="縁日">縁日</option><option value="縁日（やぐら付）">縁日（やぐら付）</option><option value="うごく！ぬりえ">うごく！ぬりえ</option><option value="カッティングレーサー">カッティングレーサー</option><option value="キニナルゲームス">キニナルゲームス</option><option value="段ボール迷路">段ボール迷路</option><option value="ハンドスナイパー">ハンドスナイパー</option><option value="プラレール">プラレール</option><option value="ポップコーン">ポップコーン</option><option value="メッシュビジョン">メッシュビジョン</option><option value="わたがし">わたがし</option>
+        </optgroup>
         <optgroup label="インフレーター">
-          <option value="inflatables">インフレーター（すべて）</option>
-          </optgroup>
+          <option value="inflatables">インフレーター（すべて）</option><option value="パンダ">パンダ</option><option value="ゴリラ">ゴリラ</option><option value="恐竜">恐竜</option><option value="ユニコーン">ユニコーン</option><option value="サンタクロース">サンタクロース</option><option value="逆立ちピエロ">逆立ちピエロ</option><option value="ハロウィンかぼちゃ">ハロウィンかぼちゃ</option>
+        </optgroup>
       </select>
     </div>
     <div class="navigation-container">
@@ -42,25 +39,18 @@
       <button id="next-button" class="nav-button">&gt;</button>
     </div>
   </div>
-
   <div id='calendar'></div>
-
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const calendarEl = document.getElementById('calendar');
       const gasWebAppUrl = 'https://script.google.com/macros/s/AKfycbzuwcfA--IUZAXBSet2jB5kyGMFch9bcJ_C62xMHiV-afdxZ8DUa1--maQnMyKlC7F5/exec';
       const inflatableItems = ['パンダ', 'ゴリラ', '恐竜', 'ユニコーン', 'サンタクロース', '逆立ちピエロ', 'ハロウィンかぼちゃ'];
       let allEventsCache = [];
-
       const calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'listMonth',
         locale: 'ja',
         headerToolbar: false,
         displayEventTime: false,
-        
-        // ★★★ カレンダーの高さをコンテンツに合わせて自動調整する設定 ★★★
-        height: 'auto',
-
         datesSet: function(dateInfo) {
           document.getElementById('calendar-title').textContent = dateInfo.view.title;
         },
@@ -76,20 +66,25 @@
         }
       });
       calendar.render();
-
       function filterEvents(events) {
         const selectedValue = document.getElementById('product-filter').value;
         if (selectedValue === 'all') return events;
         if (selectedValue === 'inflatables') return events.filter(event => inflatableItems.includes(event.title));
         return events.filter(event => event.title === selectedValue);
       }
-
       document.getElementById('prev-button').addEventListener('click', () => { calendar.prev(); });
       document.getElementById('next-button').addEventListener('click', () => { calendar.next(); });
       document.getElementById('product-filter').addEventListener('change', () => {
         calendar.removeAllEvents();
         calendar.addEventSource(filterEvents(allEventsCache));
       });
+      const ro = new ResizeObserver(() => {
+        window.requestAnimationFrame(() => {
+          const height = document.body.scrollHeight;
+          window.parent.postMessage({ type: 'calendarHeight', height: height }, '*');
+        });
+      });
+      ro.observe(document.body);
     });
   </script>
 </body>
