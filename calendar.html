@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -17,12 +16,12 @@
   .filter-items input { margin-right: 8px; accent-color: #FFD700; }
   .filter-items label:hover { background-color: #f0f0f0; }
   .toggle-buttons { margin-bottom: 15px; display: flex; gap: 10px; }
-  .toggle-buttons button { background-color: #e0e0e0; border: none; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8em; font-weight: 500; }
+  .toggle-buttons button { background-color: #e0e0e0; border: none; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8em; font-weight: 500; color: #455a64; }
   .toggle-buttons button:hover { background-color: #d0d0d0; }
   .fc { border: none; }
   .fc-header-toolbar { margin-bottom: 1.5em !important; }
   .fc-toolbar-title { font-size: 1.5em; font-weight: 700; color: #333; }
-  .fc-button { background-color: #f0f0f0; color: #333; border: none; border-radius: 8px; padding: 0.5em 1em; font-weight: 500; transition: background-color 0.2s ease; text-transform: capitalize; }
+  .fc-button { background-color: #f0f0f0; border: none; border-radius: 8px; padding: 0.5em 1em; font-weight: 500; transition: background-color 0.2s ease; text-transform: capitalize; color: #455a64; }
   .fc-button:hover { background-color: #e0e0e0; }
   .fc-button-primary:not(:disabled).fc-button-active, .fc-today-button { background-color: #FFD700 !important; color: #333 !important; font-weight: 700; }
   .fc-button-primary:not(:disabled).fc-button-active:hover, .fc-today-button:hover { background-color: #f0c400 !important; }
@@ -31,8 +30,13 @@
   .fc-daygrid-day-number { padding: 0.5em; font-weight: 500; }
   .fc-day-today { background-color: #FFFBE6; }
   .fc-day-today .fc-daygrid-day-number { font-weight: 700; }
-  .fc-event { background-color: #FFF5B1 !important; border-color: #FDEE8A !important; color: #4A4A4A !important; border-radius: 4px; padding: 3px 6px; font-weight: 500; font-size: 0.85em; cursor: pointer; }
+  /* 通常イベントのスタイル */
+  .fc-event { background-color: #e0f2f7 !important; border-color: #b2ebf2 !important; padding: 2px 5px; font-weight: 500; font-size: 0.8em; cursor: pointer; margin-bottom: 4px !important; }
+  .fc-event-main { color: #455a64 !important; }
   .fc-list-event-dot { border-color: #FFD700 !important; }
+  /* インフレーターイベントの色を上書き */
+  .fc-event.inflatable-event { background-color: #ffebee !important; border-color: #ffcdd2 !important; }
+  .inflatable-event .fc-event-main { color: #c62828 !important; }
 </style>
 </head>
 <body>
@@ -42,31 +46,23 @@
     <button id="uncheck-all">すべて解除</button>
   </div>
 
-  <div id="filter-container">
-    <div class="filter-group">
-      <h3>アトラクション</h3>
-      <div class="filter-items" id="attractions-filter">
-        <label><input type="checkbox" name="product" value="電車DEスロット" checked> 電車DEスロット</label>
-        <label><input type="checkbox" name="product" value="AR釣りゲーム" checked> AR釣りゲーム</label>
-        <label><input type="checkbox" name="product" value="縁日" checked> 縁日</label>
-        <label><input type="checkbox" name="product" value="縁日（やぐら付）" checked> 縁日（やぐら付）</label>
-        <label><input type="checkbox" name="product" value="うごく！ぬりえ" checked> うごく！ぬりえ</label>
-        <label><input type="checkbox" name="product" value="カッティングレーサー" checked> カッティングレーサー</label>
-        <label><input type="checkbox" name="product" value="キニナルゲームス" checked> キニナルゲームス</label>
-        <label><input type="checkbox" name="product" value="段ボール迷路" checked> 段ボール迷路</label>
-        <label><input type="checkbox" name="product" value="ハンドスナイパー" checked> ハンドスナイパー</label>
-        <label><input type="checkbox" name="product" value="プラレール" checked> プラレール</label>
-        <label><input type="checkbox" name="product" value="ポップコーン" checked> ポップコーン</label>
-        <label><input type="checkbox" name="product" value="メッシュビジョン" checked> メッシュビジョン</label>
-        <label><input type="checkbox" name="product" value="わたがし" checked> わたがし</label>
-      </div>
-    </div>
-
-    <div class="filter-group">
-      <h3>インフレーター</h3>
-      <div class="filter-items" id="inflatables-filter">
-        <label><input type="checkbox" name="product_group" value="inflatables" checked> インフレーター（すべて）</label>
-      </div>
+  <div class="filter-group">
+    <h3>表示フィルター</h3>
+    <div class="filter-items" id="filter-container">
+      <label><input type="checkbox" id="inflatables-toggle" name="product_group" value="inflatables" checked> インフレーター（すべて）</label>
+      <label><input type="checkbox" name="product" value="電車DEスロット" checked> 電車DEスロット</label>
+      <label><input type="checkbox" name="product" value="AR釣りゲーム" checked> AR釣りゲーム</label>
+      <label><input type="checkbox" name="product" value="縁日" checked> 縁日</label>
+      <label><input type="checkbox" name="product" value="縁日（やぐら付）" checked> 縁日（やぐら付）</label>
+      <label><input type="checkbox" name="product" value="うごく！ぬりえ" checked> うごく！ぬりえ</label>
+      <label><input type="checkbox" name="product" value="カッティングレーサー" checked> カッティングレーサー</label>
+      <label><input type="checkbox" name="product" value="キニナルゲームス" checked> キニナルゲームス</label>
+      <label><input type="checkbox" name="product" value="段ボール迷路" checked> 段ボール迷路</label>
+      <label><input type="checkbox" name="product" value="ハンドスナイパー" checked> ハンドスナイパー</label>
+      <label><input type="checkbox" name="product" value="プラレール" checked> プラレール</label>
+      <label><input type="checkbox" name="product" value="ポップコーン" checked> ポップコーン</label>
+      <label><input type="checkbox" name="product" value="メッシュビジョン" checked> メッシュビジョン</label>
+      <label><input type="checkbox" name="product" value="わたがし" checked> わたがし</label>
     </div>
   </div>
 
@@ -76,9 +72,8 @@
     document.addEventListener('DOMContentLoaded', function() {
       const calendarEl = document.getElementById('calendar');
       // ★★★ 新しいURLを反映しました ★★★
-      const gasWebAppUrl = 'https://script.google.com/macros/s/AKfycbwCKaPzgtfs7Bi223xNq0YONESGRTxJ4HOFI50elmumKuK_luz1fehR55ODJKSW4oqi7A/exec';
+      const gasWebAppUrl = 'https://script.google.com/macros/s/AKfycbxqfWShieOHa7s6L9c6nDAH_Vp4cdsbwo2wBrxEyo5Xpro-LazsLNFCUK2pRckhhS58aw/exec';
       const inflatableItems = ['パンダ', 'ゴリラ', '恐竜', 'ユニコーン', 'サンタクロース', '逆立ちピエロ', 'ハロウィンかぼちゃ'];
-      
       let allEventsCache = [];
 
       const calendar = new FullCalendar.Calendar(calendarEl, {
@@ -91,7 +86,6 @@
         },
         buttonText: { today: '今日', month: '月', list:  'リスト' },
         displayEventTime: false,
-
         events: function(fetchInfo, successCallback, failureCallback) {
           if (allEventsCache.length > 0) {
             successCallback(filterEvents(allEventsCache));
@@ -111,10 +105,10 @@
 
       function filterEvents(events) {
         let productsToShow = [];
-        document.querySelectorAll('#attractions-filter input:checked').forEach(input => {
+        document.querySelectorAll('input[name="product"]:checked').forEach(input => {
           productsToShow.push(input.value);
         });
-        if (document.querySelector('#inflatables-filter input:checked')) {
+        if (document.querySelector('#inflatables-toggle:checked')) {
           productsToShow.push(...inflatableItems);
         }
         return events.filter(event => productsToShow.includes(event.title));
