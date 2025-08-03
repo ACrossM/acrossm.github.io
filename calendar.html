@@ -1,3 +1,11 @@
+了解しました。
+新しいURLを反映した最終版のコードです。
+
+このhtmlファイルをGitHub Pagesにアップロードすれば、すべてが連携して動作します。
+
+最終完成版 calendar.html
+HTML
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -30,17 +38,7 @@
   .fc-daygrid-day-number { padding: 0.5em; font-weight: 500; }
   .fc-day-today { background-color: #FFFBE6; }
   .fc-day-today .fc-daygrid-day-number { font-weight: 700; }
-  /* ★★★ イベントの黄色を少し抑える ★★★ */
-  .fc-event {
-    background-color: #FFF5B1 !important; /* 背景色を少し薄く */
-    border-color: #FDEE8A !important;   /* 枠線も薄く */
-    color: #4A4A4A !important;        /* 文字色を少し柔らかく */
-    border-radius: 4px;
-    padding: 3px 6px;
-    font-weight: 500;
-    font-size: 0.85em;
-    cursor: pointer;
-  }
+  .fc-event { background-color: #FFF5B1 !important; border-color: #FDEE8A !important; color: #4A4A4A !important; border-radius: 4px; padding: 3px 6px; font-weight: 500; font-size: 0.85em; cursor: pointer; }
   .fc-list-event-dot { border-color: #FFD700 !important; }
 </style>
 </head>
@@ -84,10 +82,11 @@
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const calendarEl = document.getElementById('calendar');
-      const gasWebAppUrl = 'https://script.google.com/macros/s/AKfycbxh2wqe4jbtKg3WVCHvvhqGkM7ca0_xFA72FxtihQViiI1AEKaTYIcDzmRUthVGxYTLAg/exec';
+      // ★★★ 新しいURLを反映しました ★★★
+      const gasWebAppUrl = 'https://script.google.com/macros/s/AKfycbwCKaPzgtfs7Bi223xNq0YONESGRTxJ4HOFI50elmumKuK_luz1fehR55ODJKSW4oqi7A/exec';
       const inflatableItems = ['パンダ', 'ゴリラ', '恐竜', 'ユニコーン', 'サンタクロース', '逆立ちピエロ', 'ハロウィンかぼちゃ'];
       
-      let allEventsCache = []; // 全イベントをキャッシュする変数
+      let allEventsCache = [];
 
       const calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
@@ -98,20 +97,16 @@
           right: 'dayGridMonth,listWeek'
         },
         buttonText: { today: '今日', month: '月', list:  'リスト' },
-        
-        // ★★★ 時間を非表示にする設定 ★★★
         displayEventTime: false,
 
         events: function(fetchInfo, successCallback, failureCallback) {
-          // ★★★ 反映速度を改善するロジック ★★★
-          // キャッシュがあればそれを使う、なければGASから取得
           if (allEventsCache.length > 0) {
             successCallback(filterEvents(allEventsCache));
           } else {
             fetch(gasWebAppUrl)
               .then(response => response.json())
               .then(allEvents => {
-                allEventsCache = allEvents; // 取得したデータをキャッシュ
+                allEventsCache = allEvents;
                 successCallback(filterEvents(allEventsCache));
               })
               .catch(error => failureCallback(error));
@@ -121,7 +116,6 @@
 
       calendar.render();
 
-      // --- フィルター機能のJavaScript ---
       function filterEvents(events) {
         let productsToShow = [];
         document.querySelectorAll('#attractions-filter input:checked').forEach(input => {
@@ -136,8 +130,6 @@
       const allCheckboxes = document.querySelectorAll('#filter-container input[type="checkbox"]');
       allCheckboxes.forEach(input => {
         input.addEventListener('change', () => {
-          // ★★★ 反映速度を改善 ★★★
-          // サーバーに再アクセスせず、キャッシュから再描画する
           calendar.removeAllEvents();
           calendar.addEventSource(filterEvents(allEventsCache));
         });
